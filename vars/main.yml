@@ -6,8 +6,12 @@ proxy_env: {}  # yamllint disable rule:braces
 #  https_proxy: http://10.128.64.9:3128
 # ---------------------------------------------------------------------
 
+#
+firewall_type: "firewalld"
+# Note: can be firewalld/iptables/uwf
+
 # Cluster variables
-cluster_vip: ""  # IP address for client access to the databases in the cluster (optional).
+cluster_vip: "192.168.122.18"  # IP address for client access to the databases in the cluster (optional).
 vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "ens32").
 # Note: VIP-based solutions such as keepalived or vip-manager may not function correctly in cloud environments like AWS.
 
