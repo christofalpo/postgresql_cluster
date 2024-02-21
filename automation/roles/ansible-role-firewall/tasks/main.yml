@@ -12,24 +12,18 @@
 
 - name: Disable other firewalls
   ansible.builtin.import_tasks: disable-other-firewalls.yml
-  when: (firewall_disable_firewalld | bool) or
-        (firewall_disable_ufw | bool )
+  when: (firewall_disable_firewalld|bool) or (firewall_disable_ufw|bool )
 
 - name: Setup firewalld
   ansible.builtin.import_tasks: firewalld.yml
-  when: (firewall_disable_firewalld is defined) and
-        not (firewall_disable_firewalld | bool) and
-        (firewall_disable_ufw | bool)
+  when: (firewall_disable_firewalld is defined) and not (firewall_disable_firewalld|bool) and (firewall_disable_ufw|bool)
 
 - name: Setup ufw
   ansible.builtin.import_tasks: ufw.yml
-  when: (firewall_disable_firewalld | bool) and
-        (firewall_disable_ufw is defined) and
-        not (firewall_disable_ufw | bool)
+  when: (firewall_disable_firewalld|bool) and (firewall_disable_ufw is defined) and not (firewall_disable_ufw|bool)
 
 - name: Setup iptables
   ansible.builtin.import_tasks: iptables.yml
-  when: (firewall_disable_firewalld | bool) and
-        (firewall_disable_ufw | bool)
+  when: (firewall_disable_firewalld|bool) and (firewall_disable_ufw|bool)
 
 ...
