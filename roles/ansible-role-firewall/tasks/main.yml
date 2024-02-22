@@ -1,4 +1,17 @@
 ---
+- name: Which kind of firewall?
+  debug:
+    var: firewall_type
+
+- name: firewalld?
+  debug:
+    var: firewall_disable_firewalld
+
+- name: uwf?
+  debug:
+    var: firewall_disable_ufw
+
+
 - name: Include firewalld
   ansible.builtin.import_tasks: firewalld.yml
   when: "(firewall_disable_firewalld is defined) and not (firewall_disable_firewalld|bool) and firewall_disable_ufw|bool"
