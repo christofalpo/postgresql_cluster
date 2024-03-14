@@ -7,10 +7,18 @@
     password: "{{ patroni_restapi_password | default(omit) }}"
     body: '{"leader":"{{ ansible_hostname }}"}'
     body_format: json
+    timeout: 300
+    status_code:
+      - 200
+      - 202
+      - 412
   register: patroni_switchover_result
-  until: patroni_switchover_result.status == 200
+  until:
   retries: 300
   delay: 2
+  failed_when:
+    - patroni_switchover_result.status == 400
+    - patroni_switchover_result.status == 503
   environment:
     no_proxy: "{{ inventory_hostname }}"
 
