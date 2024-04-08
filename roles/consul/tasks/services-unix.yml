@@ -1,0 +1,42 @@
+---
+## File: services-unix.yml
+
+- name: Get the list of service config files
+  ansible.builtin.find:
+    paths: "{{ consul_configd_path }}"
+    file_type: file
+  register: services_enabled_unix
+
+- name: Set var for enabled services
+  ansible.builtin.set_fact:
+    services_enabled_files: "{{ services_enabled_unix['files'] }}"
+
+- name: Set fact with list of existing configuration files
+  ansible.builtin.set_fact:
+    list_current_service_config: "{{ list_current_service_config | default([]) + [config_file_item.path] }}"
+  with_items: "{{ services_enabled_files }}"
+  loop_control:
+    loop_var: config_file_item
+
+- name: Set fact with list of services we manage
+  ansible.builtin.set_fact:
+    managed_files: "{{ managed_files | default([]) }} + [ '{{ consul_configd_path }}/service_{{ service_item.id }}.json' ]"
+  with_items: "{{ consul_services }}"
+  loop_control:
+    loop_var: service_item
+
+- name: Delete non declared services
+  ansible.builtin.file:
+    path: "{{ non_declared_service_item }}"
+    state: absent
+  when:
+    - non_declared_service_item not in managed_files
+    - non_declared_service_item not in consul_cleanup_ignore_files
+  with_items: "{{ list_current_service_config }}"
+  loop_control:
+    loop_var: non_declared_service_item
+  ignore_errors: "{{ ansible_check_mode }}"
+  notify:
+    - restart consul
+
+

@@ -1,0 +1,24 @@
+---
+- debug:
+    var: firewall_allowed_tcp_ports
+
+- name: Ensure firewalld is started at boot
+  ansible.builtin.service:
+    name: firewalld
+    state: "{{ firewall_state }}"
+    enabled: "{{ firewall_enabled_at_boot }}"
+
+- name: Get active zone(s)
+  ansible.builtin.command: "firewall-cmd --get-active-zones"
+  register: firewalld_active_zones
+  
+- name: Add ports to zone
+  ansible.posix.firewalld:
+    permanent: True
+    immediate: True
+    state: "enabled"
+    port: "{{ item }}/tcp"
+  loop: "{{ firewall_allowed_tcp_ports|list }}"
+  when: "firewall_allowed_tcp_ports is defined"
+
+

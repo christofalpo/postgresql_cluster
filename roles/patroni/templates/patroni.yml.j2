@@ -31,7 +31,7 @@ restapi:
 
 {% if not dcs_exists|bool and dcs_type == 'etcd' %}
 etcd3:
-  hosts: {% for host in groups['etcd_cluster'] %}{{ hostvars[host]['inventory_hostname'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
+  hosts: {% for host in groups['etcd_cluster'] %}{{ hostvars[host]['ansible_default_ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
 {% endif %}
 {% if dcs_exists|bool and dcs_type == 'etcd' %}
 etcd3:

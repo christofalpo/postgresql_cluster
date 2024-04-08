@@ -99,6 +99,11 @@
     - ansible_distribution_major_version >= '8'
     - python_version | default('') | length > 1
   tags: install_packages
+  notify:
+    - Reinstall platform-python
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Set Pip alternative
   community.general.alternatives:

@@ -6,8 +6,12 @@ proxy_env: {}  # yamllint disable rule:braces
 #  https_proxy: http://10.128.64.9:3128
 # ---------------------------------------------------------------------
 
+#
+firewall_type: "firewalld"
+# Note: can be firewalld/iptables/uwf
+
 # Cluster variables
-cluster_vip: ""  # IP address for client access to the databases in the cluster (optional).
+cluster_vip: "10.140.195.215"  # IP address for client access to the databases in the cluster (optional).
 vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "ens32").
 # Note: VIP-based solutions such as keepalived or vip-manager may not function correctly in cloud environments like AWS.
 
@@ -24,7 +28,7 @@ synchronous_mode_strict: false  # if 'true' then block all client writes to the 
 synchronous_node_count: 1  # number of synchronous standby databases
 
 # Load Balancing
-with_haproxy_load_balancing: false  # or 'true' if you want to install and configure the load-balancing
+with_haproxy_load_balancing: true # false or 'true' if you want to install and configure the load-balancing
 haproxy_listen_port:
   master: 5000
   replicas: 5001
@@ -142,7 +146,6 @@ consul_services:
 #      - { http: "http://{{ inventory_hostname }}:{{ patroni_restapi_port }}/async?lag={{ patroni_maximum_lag_on_replica }}", interval: "2s" }
 #      - { args: ["systemctl", "status", "pgbouncer"], interval: "5s" }
 
-
 # PostgreSQL variables
 postgresql_version: "16"
 # postgresql_data_dir: see vars/Debian.yml or vars/RedHat.yml
@@ -184,7 +187,6 @@ postgresql_extensions: []
 #  - { ext: "pg_stat_kcache", db: "" }  # postgresql-<version>-pg-stat-kcache package is required
 #  - { ext: "", db: "" }
 #  - { ext: "", db: "" }
-
 
 # postgresql parameters to bootstrap dcs (are parameters for example)
 postgresql_parameters:
@@ -300,7 +302,6 @@ postgresql_pgpass:
   - "*:{{ pgbouncer_listen_port }}:*:{{ patroni_superuser_username }}:{{ patroni_superuser_password }}"
 #  - hostname:port:database:username:password
 
-
 # PgBouncer parameters
 pgbouncer_install: true  # or 'false' if you do not want to install and configure the pgbouncer service
 pgbouncer_processes: 1  # Number of pgbouncer processes to be used. Multiple processes use the so_reuseport option for better performance.
@@ -331,7 +332,6 @@ pgbouncer_pools:
 #  - { name: "mydatabase", dbname: "mydatabase", pool_parameters: "pool_size=20 pool_mode=transaction" }
 #  - { name: "", dbname: "", pool_parameters: "" }
 #  - { name: "", dbname: "", pool_parameters: "" }
-
 
 # Extended variables (optional)
 patroni_restapi_listen_addr: "0.0.0.0" # Listen on all interfaces. Or use "{{ inventory_hostname }}" to listen on a specific IP address.
@@ -576,14 +576,12 @@ pgbackrest_cron_jobs:
     job: "pgbackrest --type=diff --stanza={{ pgbackrest_stanza }} backup"
     # job: "if [ $(psql -tAXc 'select pg_is_in_recovery()') = 'f' ]; then pgbackrest --type=diff --stanza={{ pgbackrest_stanza }} backup; fi"
 
-
 # PITR mode (if patroni_cluster_bootstrap_method: "pgbackrest" or "wal-g"):
 # 1) The database cluster directory will be cleaned (for "wal-g") or overwritten (for "pgbackrest" --delta restore).
 # 2) And also the patroni cluster "{{ patroni_cluster_name }}" will be removed from the DCS (if exist) before recovery.
 
 disable_archive_command: true  # or 'false' to not disable archive_command after restore
 keep_patroni_dynamic_json: true  # or 'false' to remove patroni.dynamic.json after restore (if exists)
-
 
 # Netdata - https://github.com/netdata/netdata
 netdata_install: false  # or 'true' for install Netdata on postgresql cluster nodes (with kickstart.sh)
