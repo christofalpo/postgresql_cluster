@@ -82,13 +82,11 @@ sysctl_conf:
 # Transparent Huge Pages
 disable_thp: true  # or 'false'
 
-
 # Max open file limit
 set_limits: true  # or 'false'
 limits_user: "postgres"
 soft_nofile: 65536
 hard_nofile: 200000
-
 
 # I/O Scheduler (optional)
 set_scheduler: false  # or 'true'
@@ -107,13 +105,11 @@ scheduler:
 # bfq         - (avoid for databases)
 # kyber
 
-
 # SSH Keys (optional)
 enable_ssh_key_based_authentication: false  # or 'true' for configure SSH Key-Based Authentication
 ssh_key_user: "postgres"
 ssh_key_state: "present"
 ssh_known_hosts: "{{ groups['postgres_cluster'] }}"
-
 
 # sudo
 sudo_users:
@@ -178,7 +174,6 @@ firewall_additional_rules_for:
 # disable firewalld (installed by default on RHEL/CentOS) or ufw (installed by default on Ubuntu)
 firewall_disable_firewalld: false
 firewall_disable_ufw: true
-
 
 # (optional) - Fetch files from the server in the "master" group. These files can later be copied to all servers.
 fetch_files_from_master: []
