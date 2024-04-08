@@ -1,0 +1,7 @@
+---
+- name: start consul on windows
+  ansible.windows.win_service:
+    name: consul
+    state: started
+  listen: 'start consul'
+
