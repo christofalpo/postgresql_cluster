@@ -22,7 +22,7 @@
     - etcd
     - etcd_install
 
-- block:  # install etcd package from repo
+- block:  # install etcd package from git release repo
     - name: Download "etcd" package
       ansible.builtin.get_url:
         url: "{{ item }}"
