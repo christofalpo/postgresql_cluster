@@ -86,20 +86,33 @@ bootstrap:
       {% for parameter in postgresql_parameters %}
         {{ parameter.option }}: {{ parameter.value }}
       {% endfor %}
-  {% if patroni_standby_cluster.host is defined and patroni_standby_cluster.host | length > 0 %}
+    {% if patroni_standby_cluster.host is defined and patroni_standby_cluster.host | length > 0 %}
     standby_cluster:
       host: {{ patroni_standby_cluster.host }}
       port: {{ patroni_standby_cluster.port }}
-    {% if patroni_standby_cluster.primary_slot_name is defined and patroni_standby_cluster.primary_slot_name | length > 0 %}
+      {% if patroni_standby_cluster.primary_slot_name is defined and patroni_standby_cluster.primary_slot_name | length > 0 %}
       primary_slot_name: {{ patroni_standby_cluster.primary_slot_name }}
-    {% endif %}
-    {% if patroni_standby_cluster.restore_command is defined and patroni_standby_cluster.restore_command | length > 0 %}
+      {% endif %}
+      {% if patroni_standby_cluster.restore_command is defined and patroni_standby_cluster.restore_command | length > 0 %}
       restore_command: {{ patroni_standby_cluster.restore_command }}
-    {% endif %}
-    {% if patroni_standby_cluster.recovery_min_apply_delay is defined and patroni_standby_cluster.recovery_min_apply_delay | length > 0 %}
+      {% endif %}
+      {% if patroni_standby_cluster.recovery_min_apply_delay is defined and patroni_standby_cluster.recovery_min_apply_delay | length > 0 %}
       recovery_min_apply_delay: {{ patroni_standby_cluster.recovery_min_apply_delay }}
+     {% endif %}
     {% endif %}
-  {% endif %}
+    {% if patroni_slots is defined and patroni_slots | length > 0 %}
+    slots:
+      {% for slot in patroni_slots %}
+      {{ slot.slot }}:
+        type: {{ slot.type }}
+        {% if slot.plugin | default('') | length > 0 %}
+        plugin: {{ slot.plugin }}
+        {% endif %}
+        {% if slot.database | default('') | length > 0 %}
+        database: {{ slot.database }}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
 
 {% if postgresql_exists|bool %}
 #  initdb:  # List options to be passed on to initdb
@@ -211,10 +224,22 @@ watchdog:
   safety_margin: 5
 
 tags:
-  nofailover: false
-  noloadbalance: false
-  clonefrom: false
+{% if patroni_tags is defined and patroni_tags | length > 0 %}
+  {{ patroni_tags | replace(" ", "") | replace("=", ": ") | replace(",", "\n  ") }}
+{% endif %}
+{% set normalized_tags = patroni_tags | default('') | replace(" ", "") %}
+{% if 'nosync=' not in normalized_tags %}
   nosync: false
+{% endif %}
+{% if 'noloadbalance=' not in normalized_tags %}
+  noloadbalance: false
+{% endif %}
+{% if 'nofailover=' not in normalized_tags %}
+  nofailover: false
+{% endif %}
+{% if 'clonefrom=' not in normalized_tags %}
+  clonefrom: false
+{% endif %}
 
   # specify a node to replicate from (cascading replication)
 #  replicatefrom: (node name)
