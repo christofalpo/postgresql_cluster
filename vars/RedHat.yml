@@ -18,15 +18,22 @@ postgresql_stats_temp_directory_size: "1024m"
 
 # Repository
 yum_repository: []
+#  - name: ""
+#    description: ""
+#    baseurl: ""
+#    gpgkey: ""
+#    gpgcheck: "yes"
+
 #  - name: "repo name"
 #    description: "repo description"
 #    baseurl: "https://my-repo.url"
 #    gpgkey: "https://my-repo-key.url"
 #    gpgcheck: "yes"
 
-install_epel_repo: true  # or 'false' (installed from the package "epel-release-latest.noarch.rpm")
-install_postgresql_repo: true  # or 'false' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
-install_scl_repo: true  # or 'false' (Redhat 7 family only)
+install_epel_repo: false # or 'true' (installed from the package "epel-release-latest.noarch.rpm")
+install_postgresql_repo: false # or 'true' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
+install_timescale_repo: false # or 'true' (installed from the timescale git repo)
+install_scl_repo: false # or 'true' (Redhat 7 family only)
 
 # Packages (for yum repo)
 python_version: "3.11"
@@ -127,7 +134,7 @@ installation_method: "repo"  # (default)"repo" or "file"
 
 # Patroni package will be installed from the pip repository (by default).
 # You also have the option of choosing an patroni installation method using the rpm package.
-patroni_installation_method: "pip"  # (default)"pip" or "rpm"
+patroni_installation_method: "rpm"  # (default)"pip" or "rpm"
 # if patroni_installation_method: "rpm"
 patroni_packages:
   - patroni
