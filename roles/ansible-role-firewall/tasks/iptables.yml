@@ -1,4 +1,5 @@
 ---
+
 - name: Ensure iptables is present.
   ansible.builtin.package:
     name: iptables
@@ -72,3 +73,4 @@
     state: "{{ firewall_state }}"
     enabled: "{{ firewall_enabled_at_boot }}"
 
+...
