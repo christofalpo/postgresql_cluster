@@ -1,4 +1,5 @@
 ---
+
 - name: Check if firewalld package is installed (on RHEL).
   ansible.builtin.command: yum list installed firewalld
   register: firewalld_installed

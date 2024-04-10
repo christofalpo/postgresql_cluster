@@ -1,6 +1,12 @@
 ---
-- debug:
-    var: firewall_allowed_tcp_ports
+
+- name: Deploying firewalld firewall settings
+  ansible.builtin.debug:
+    var: firewall_settings
+  vars:
+    firewall_settings:
+      firewall_open_ports:
+        ports: "{{ firewall_allowed_tcp_ports }}"
 
 - name: Ensure firewalld is started at boot
   ansible.builtin.service:
@@ -21,4 +27,4 @@
   loop: "{{ firewall_allowed_tcp_ports|list }}"
   when: "firewall_allowed_tcp_ports is defined"
 
-
+...
