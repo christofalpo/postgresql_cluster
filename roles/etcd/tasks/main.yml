@@ -52,7 +52,24 @@
         - etcdctl
   when:
     - installation_method == "repo"
+    - etcd_installation_method == "tgz"
     - etcd_package_repo | length > 0
+    - not ansible_check_mode
+  tags: 
+    - etcd
+    - etcd_install
+
+- block:  # install etch package from rpm
+    - name: Install etcd rpm
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - etcd
+        - python3-etcd
+  when:
+    - installation_method == "repo"
+    - etcd_installation_method == "rpm"
     - not ansible_check_mode
   tags: 
     - etcd
@@ -77,6 +94,7 @@
         - etcdctl
   when:
     - installation_method == "file"
+    - etcd_installation_method == "file"
     - etcd_package_file | length > 0
     - not ansible_check_mode
   tags:
