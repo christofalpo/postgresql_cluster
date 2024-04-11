@@ -1,2 +1,32 @@
 ---
 
+- name: Deploying ufw firewall settings
+  ansible.builtin.debug:
+    var: firewall_settings
+  vars:
+    firewall_settings:
+      firewall_open_ports:
+        ports: "{{ firewall_allowed_tcp_ports }}"
+
+- name: Ensure ufw is started at boot
+  ansible.builtin.service:
+    name: ufw
+    state: "{{ firewall_state }}"
+    enabled: "{{ firewall_enabled_at_boot }}"
+
+- name: Make sure ufw is enabled and loaded
+  ansible.builtin.ufw:
+    state: enabled
+    logging: on
+
+- name: Add ports to default
+  community.general.ufw:
+    rule: allow
+    proto: tcp
+    port: "{{ item }}"
+    src: 0.0.0.0/0
+    comment: "Allowing {{ item }}/tcp from any (ipv4)"
+  loop: "{{ firewall_allowed_tcp_ports|list }}
+  when: "firewall_allowed_tcp_ports is defined"
+
+...
