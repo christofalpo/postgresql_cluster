@@ -99,12 +99,14 @@ postgresql_packages:
 
 # Extra packages
 etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+etcd_installation_method: "rpm" # 'rpm/tgz/file' if installed from file
 vip_manager_package_repo:
   "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.rpm"
+vip_manager_installation_method: "rpm"
 
 # (if with_haproxy_load_balancing: true)
 haproxy_installation_method: "rpm"  # (default)"rpm" or "src"
-haproxy_install_repo: true  # or 'false' # only for RedHat/CentOS version 7.
+haproxy_install_repo: false  # or 'false' # only for RedHat/CentOS version 7.
 # For RedHat/CentOS/OracleLinux 7 the haproxy version 1.8 (LTS)
 # will be installed from the "rh-haproxy18" package from the Software Collections (SCL) repository.
 # You can preload the haproxy rpm packages to your YUM repository (in this case specify "haproxy_install_repo: false").
