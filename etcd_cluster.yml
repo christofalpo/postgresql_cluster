@@ -43,8 +43,8 @@
       environment: "{{ proxy_env | default({}) }}"
       when: ansible_os_family == "Debian" and installation_method == "repo"
 
-    - name: firewall enabled?
-      debug:
+    - name: Firewall enabled?
+      ansible.builtin.debug:
         var: firewall_enabled_at_boot
 
     - name: Build a firewall_ports_dynamic_var
@@ -52,7 +52,7 @@
         firewall_ports_dynamic_var: "{{ firewall_ports_dynamic_var | default([]) + (firewall_allowed_tcp_ports_for[item] | default([])) }}"
       loop: "{{ hostvars[inventory_hostname].group_names }}"
       when: firewall_enabled_at_boot | bool
-      tags: 
+      tags:
         - always
         - firewall
 

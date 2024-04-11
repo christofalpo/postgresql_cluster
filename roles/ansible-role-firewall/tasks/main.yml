@@ -1,12 +1,13 @@
 ---
+
 - name: Which kind of firewall?
   ansible.builtin.debug:
-    var: firewall_configuration
+    var: _firewall_configuration
   vars:
-    firewall_configuration:
+    _firewall_configuration:
       firewall_type: "{{ firewall_type }}"
-      firewalld_disabled: "{{ firewall_disable_firewalld|bool }}"
-      uwf_disabled: "{{ firewall_disable_ufw|bool }}"
+      firewalld_disabled: "{{ firewall_disable_firewalld | bool }}"
+      uwf_disabled: "{{ firewall_disable_ufw | bool }}"
 
 - name: Include firewalld
   ansible.builtin.import_tasks: firewalld.yml

@@ -13,3 +13,4 @@
   delay: 1
   until: windows_service_started is succeeded
 
+...

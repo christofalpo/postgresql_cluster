@@ -20,11 +20,11 @@
   
 - name: Add ports to zone
   ansible.posix.firewalld:
-    permanent: True
-    immediate: True
+    permanent: true
+    immediate: true
     state: "enabled"
     port: "{{ item }}/tcp"
-  loop: "{{ firewall_allowed_tcp_ports|list }}"
+  loop: "{{ firewall_allowed_tcp_ports | list }}"
   when: "firewall_allowed_tcp_ports is defined"
 
 ...
