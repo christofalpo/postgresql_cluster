@@ -3,10 +3,6 @@
 - name: Make sure handlers are flushed immediately
   ansible.builtin.meta: flush_handlers
 
-#- name: variables
-#  debug:
-#    var: hostvars[inventory_hostname]
-
 - name: Make sure the unzip/tar packages are present
   ansible.builtin.package:
     name:
