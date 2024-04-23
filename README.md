@@ -44,7 +44,7 @@ To provide a single entry point (VIP) for database access is used "vip-manager".
 
 #### 2. PostgreSQL High-Availability with HAProxy Load Balancing
 
-To use this scheme, specify `with_haproxy_load_balancing: true` in variable file vars/main.yml
+To use this scheme, specify `enable_haproxy_load_balancing: true` in variable file vars/main.yml
 
 This scheme provides the ability to distribute the load on reading. This also allows us to scale out the cluster (with read-only replicas).
 
@@ -232,7 +232,7 @@ nano vars/main.yml
 - `patroni_cluster_name`
 - `postgresql_version`
 - `postgresql_data_dir`
-- `with_haproxy_load_balancing` `'true'` (Type A) or `'false'`/default (Type B)
+- `enable_haproxy_load_balancing` `'true'` (Type A) or `'false'`/default (Type B)
 - `dcs_type` # "etcd" (default) or "consul" (Type C)
 
 if dcs_type: "consul", please install consul role requirements on the control node:
@@ -312,7 +312,7 @@ During the run this playbook, the new balancer node will be prepared in the same
 
 ###### Steps to add a new balancer node:
 
-Note: Used if the `with_haproxy_load_balancing` variable is set to `true`
+Note: Used if the `enable_haproxy_load_balancing` variable is set to `true`
 
 1. Add a new node to the inventory file with the variable `new_node=true`
 

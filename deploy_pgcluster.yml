@@ -189,7 +189,7 @@
 
 - name: deploy_pgcluster.yml | Deploy balancers
   ansible.builtin.import_playbook: balancers.yml
-  when: with_haproxy_load_balancing|bool
+  when: enable_haproxy_load_balancing|bool
   tags: load_balancing, haproxy
 
 - name: deploy_pgcluster.yml | Install and configure pgBackRest
@@ -254,7 +254,7 @@
       when: pgbackrest_install|bool
 
     - role: vip-manager
-      when: not with_haproxy_load_balancing|bool and
+      when: not enable_haproxy_load_balancing|bool and
         (cluster_vip is defined and cluster_vip | length > 0)
 
     # optional

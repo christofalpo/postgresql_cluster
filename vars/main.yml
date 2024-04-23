@@ -28,12 +28,12 @@ synchronous_mode_strict: false  # if 'true' then block all client writes to the 
 synchronous_node_count: 1  # number of synchronous standby databases
 
 # Load Balancing
-with_haproxy_load_balancing: true # false or 'true' if you want to install and configure the load-balancing
+enable_haproxy_load_balancing: true # false or 'true' if you want to install and configure the load-balancing
 haproxy_listen_port:
-  master: 5000
-  replicas: 5001
-  replicas_sync: 5002
-  replicas_async: 5003
+  master: 5433
+  replicas: 5461
+  replicas_sync: 5462
+  replicas_async: 5463
 # The following ('_direct') ports are used for direct connections to the PostgreSQL database,
 # bypassing the PgBouncer connection pool (if 'pgbouncer_install' is 'true').
 # Uncomment the relevant lines if you need to set up direct connections.
@@ -50,11 +50,11 @@ haproxy_timeout:
   client: "60m"
   server: "60m"
 
-# keepalived (if 'cluster_vip' is specified and 'with_haproxy_load_balancing' is 'true')
+# keepalived (if 'cluster_vip' is specified and 'enable_haproxy_load_balancing' is 'true')
 keepalived_virtual_router_id: "{{ cluster_vip.split('.')[3] | int }}" # The last octet of 'cluster_vip' IP address is used by default.
 # virtual_router_id - must be unique in the network (available values are 0..255).
 
-# vip-manager (if 'cluster_vip' is specified and 'with_haproxy_load_balancing' is 'false')
+# vip-manager (if 'cluster_vip' is specified and 'enable_haproxy_load_balancing' is 'false')
 vip_manager_version: "2.3.0"  # version to install
 vip_manager_conf: "/etc/patroni/vip-manager.yml"
 vip_manager_interval: "1000"  # time (in milliseconds) after which vip-manager wakes up and checks if it needs to register or release ip addresses.

@@ -26,7 +26,7 @@
     port: "{{ item }}"
     src: 0.0.0.0/0
     comment: "Allowing {{ item }}/tcp from any (ipv4)"
-  loop: "{{ firewall_allowed_tcp_ports|list }}
-  when: "firewall_allowed_tcp_ports is defined"
+  loop: "{{ firewall_allowed_tcp_ports|list }}"
+  when: firewall_allowed_tcp_ports is defined
 
 ...

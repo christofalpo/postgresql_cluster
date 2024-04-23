@@ -10,7 +10,7 @@
         swap_file_create: false # Added to prevent test failures in CI.
         sysctl_set: false # Added to prevent test failures in CI.
         nameservers: ["8.8.8.8", "9.9.9.9"]
-        with_haproxy_load_balancing: true
+        enable_haproxy_load_balancing: true
         cacheable: true
 
     - name: Update all system packages

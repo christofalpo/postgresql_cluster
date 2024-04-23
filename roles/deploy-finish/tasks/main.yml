@@ -94,7 +94,7 @@
           - port {{ haproxy_listen_port.replicas_async }} (read only)  asynchronous replicas only
           - +------------------------------------------------+
       when:
-        - with_haproxy_load_balancing | bool
+        - enable_haproxy_load_balancing | bool
         - synchronous_mode | bool
 
     - name: PostgreSQL Cluster connection info
@@ -107,7 +107,7 @@
           - port {{ haproxy_listen_port.replicas }} (read only)  all replicas
           - +------------------------------------------------+
       when:
-        - with_haproxy_load_balancing | bool
+        - enable_haproxy_load_balancing | bool
         - not synchronous_mode | bool
 
     - name: PostgreSQL Cluster connection info
@@ -119,7 +119,7 @@
           - port {% if pgbouncer_install %}{{ pgbouncer_listen_port }} (pgbouncer){% else %}{{ postgresql_port }}{% endif %}
           - +------------------------------------------------+
       when:
-        - not with_haproxy_load_balancing | bool
+        - not enable_haproxy_load_balancing | bool
   when:
     - (cluster_vip is defined and cluster_vip | length > 0)
     - dcs_type == "etcd"
@@ -177,7 +177,7 @@
           - port {{ haproxy_listen_port.replicas_async }} (read only)  asynchronous replicas only
           - +------------------------------------------------+
       when:
-        - with_haproxy_load_balancing | bool
+        - enable_haproxy_load_balancing | bool
         - synchronous_mode | bool
 
     - name: PostgreSQL Cluster connection info
@@ -190,7 +190,7 @@
           - port {{ haproxy_listen_port.replicas }} (read only)  all replicas
           - +------------------------------------------------+
       when:
-        - with_haproxy_load_balancing | bool
+        - enable_haproxy_load_balancing | bool
         - not synchronous_mode | bool
 
     - name: PostgreSQL Cluster connection info
@@ -202,7 +202,7 @@
           - port {% if pgbouncer_install %}{{ pgbouncer_listen_port }} (pgbouncer){% else %}{{ postgresql_port }}{% endif %}
           - +------------------------------------------------+
       when:
-        - not with_haproxy_load_balancing | bool
+        - not enable_haproxy_load_balancing | bool
   ignore_errors: true
   when:
     - (cluster_vip is not defined or cluster_vip | length < 1)

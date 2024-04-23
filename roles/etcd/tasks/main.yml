@@ -63,6 +63,16 @@
       loop:
         - etcd
         - python3-etcd
+
+    - name: Make etcd available from /usr/local/bin/
+      ansible.builtin.file:
+        src: "/usr/bin/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        state: link
+      loop:
+        - etcd
+        - etcdctl
+        
   when:
     - installation_method == "repo"
     - etcd_installation_method == "rpm"
