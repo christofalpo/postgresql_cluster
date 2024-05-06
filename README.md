@@ -281,9 +281,14 @@ Minimum set of variables:
 - `patroni_cluster_name`
 - `postgresql_version`
 - `postgresql_data_dir`
+<<<<<<< HEAD
 - `cluster_vip` to provide a single entry point for client access to databases in the cluster (optional)
 - `enable_haproxy_load_balancing` to enable load balancing (optional)
 - `dcs_type` "etcd" (default) or "consul"
+=======
+- `enable_haproxy_load_balancing` `'true'` (Type A) or `'false'`/default (Type B)
+- `dcs_type` # "etcd" (default) or "consul" (Type C)
+>>>>>>> 129f011 (Updating to enable_haproxy_load_balancing)
 
 See the vars/[main.yml](./automation/vars/main.yml), [system.yml](./automation/vars/system.yml) and ([Debian.yml](./automation/vars/Debian.yml) or [RedHat.yml](./automation/vars/RedHat.yml)) files for more details.
 

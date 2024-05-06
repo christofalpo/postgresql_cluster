@@ -167,8 +167,6 @@ patroni_pip_package_repo: []
 #  - "http://my-repo.url/patroni-1.6.0.tar.gz"
 
 # if with_haproxy_load_balancing: true
-haproxy_installation_method: "rpm"  # "rpm" (default) or "src"
-confd_package_repo: "https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64"
 
 # if haproxy_installation_method: 'src' (optional)
 haproxy_major: "1.8"
