@@ -95,7 +95,7 @@ etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_v
 vip_manager_package_repo:
   "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.rpm"
 
-# (if with_haproxy_load_balancing: true)
+# (if enable_haproxy_load_balancing: true)
 haproxy_installation_method: "rpm"  # (default)"rpm" or "src"
 haproxy_install_repo: true  # or 'false' # only for RedHat/CentOS version 7.
 # For RedHat/CentOS/OracleLinux 7 the haproxy version 1.8 (LTS)
@@ -207,7 +207,7 @@ etcd_package_file: "etcd-v3.3.27-linux-amd64.tar.gz"  # https://github.com/etcd-
 wal_g_package_file: "wal-g.linux-amd64.tar.gz"  # https://github.com/wal-g/wal-g/releases
 vip_manager_package_file: "vip-manager-1.0.2-1.x86_64.rpm"  # https://github.com/cybertec-postgresql/vip-manager/releases
 
-# if with_haproxy_load_balancing: true
+# if enable_haproxy_load_balancing: true
 haproxy_package_file: []
 #  - "rh-haproxy18-runtime-3.1-2.el7.x86_64.rpm"
 #  - "rh-haproxy18-haproxy-1.8.17-1.el7.x86_64.rpm"

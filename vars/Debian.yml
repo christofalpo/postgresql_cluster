@@ -70,7 +70,7 @@ etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_v
 vip_manager_package_repo:
   "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.deb"
 
-# (if with_haproxy_load_balancing: true)
+# (if enable_haproxy_load_balancing: true)
 haproxy_installation_method: "deb"  # (default)"deb" or "src"
 haproxy_install_repo: true  # or 'false'
 # for Debian 10 the haproxy version 1.8 (LTS) will be installed from the haproxy.debian.net repository.
@@ -178,7 +178,7 @@ patroni_deb_package_file: "patroni_2.1.4-2.pgdg22.04+1_all.deb"  # (package for 
 etcd_package_file: "etcd-v3.3.27-linux-amd64.tar.gz"  # https://github.com/etcd-io/etcd/releases
 wal_g_package_file: "wal-g.linux-amd64.tar.gz"  # https://github.com/wal-g/wal-g/releases
 vip_manager_package_file: "vip-manager_1.0.2-1_amd64.deb"  # https://github.com/cybertec-postgresql/vip-manager/releases
-# (if with_haproxy_load_balancing: true)
+# (if enable_haproxy_load_balancing: true)
 haproxy_package_file: []
 #  - "haproxy_1.8.21-1~bpo9+1_amd64.deb"
 confd_package_file: "confd-0.16.0-linux-amd64"  # https://github.com/kelseyhightower/confd/releases
