@@ -11,33 +11,33 @@
 
 # if dcs_exists: false and dcs_type: "etcd"
 [etcd_cluster]  # recommendation: 3, or 5-7 nodes
-pgtest01.regsj.intern ansible_hostname=pgtest01 ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest02.regsj.intern ansible_hostname=pgtest02 ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest03.regsj.intern ansible_hostname=pgtest03 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern ansible_hostname=sv25877 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25878.regsj.intern ansible_hostname=sv25878 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25879.regsj.intern ansible_hostname=sv25879 ansible_python_interpreter='/usr/libexec/platform-python'
 
 
 # if dcs_exists: false and dcs_type: "consul"
 [consul_instances]  # recommendation: 3 or 5-7 nodes
-pgtest01.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest02.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest03.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25878.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25879.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
 #10.128.64.144 consul_node_role=client consul_datacenter=dc1
 #10.128.64.145 consul_node_role=client consul_datacenter=dc2
 
 # if with_haproxy_load_balancing: true
 [balancers]
-pgtest01.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest02.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest03.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
+sv25878.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
+sv25879.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
 #10.128.64.144 new_node=true
 
 # PostgreSQL nodes
 [master]
-pgtest01.regsj.intern ansible_hostname=pgtest01 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern ansible_hostname=sv25877 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
 
 [replica]
-pgtest02.regsj.intern ansible_hostname=pgtest02 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
-pgtest03.regsj.intern ansible_hostname=pgtest03 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
+sv25878.regsj.intern ansible_hostname=sv25878 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
+sv25879.regsj.intern ansible_hostname=sv25879 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
 #10.128.64.144 hostname=pgnode04 postgresql_exists=false new_node=true
 
 [postgres_cluster:children]

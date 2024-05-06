@@ -101,7 +101,8 @@ haproxy_install_repo: true  # or 'false' # only for RedHat/CentOS version 7.
 # For RedHat/CentOS/OracleLinux 7 the haproxy version 1.8 (LTS)
 # will be installed from the "rh-haproxy18" package from the Software Collections (SCL) repository.
 # You can preload the haproxy rpm packages to your YUM repository (in this case specify "haproxy_install_repo: false").
-confd_package_repo: "https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64"
+# confd_package_repo: "https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64"
+confd_package_repo: "https://satellite02.regsj.intern/pulp/content/RegionSJ/Library/custom/epel_EL9/confd/confd-0.16.0-linux-amd64"
 
 # (optional) if haproxy_installation_method: 'src'
 haproxy_major: "1.8"
