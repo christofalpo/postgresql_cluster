@@ -77,10 +77,7 @@ etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_v
 vip_manager_package_repo:
   "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.deb"
 
-<<<<<<< HEAD:automation/vars/Debian.yml
 installation_method: "repo"  # "repo" (default) or "file"
-=======
->>>>>>> 129f011 (Updating to enable_haproxy_load_balancing):vars/Debian.yml
 # (if enable_haproxy_load_balancing: true)
 haproxy_installation_method: "deb"  # (default)"deb" or "src"
 haproxy_install_repo: true  # or 'false'
