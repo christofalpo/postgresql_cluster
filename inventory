@@ -25,7 +25,7 @@ pgtest03.regsj.intern consul_node_role=server consul_bootstrap_expect=true consu
 #10.128.64.144 consul_node_role=client consul_datacenter=dc1
 #10.128.64.145 consul_node_role=client consul_datacenter=dc2
 
-# if with_haproxy_load_balancing: true
+# if enable_haproxy_load_balancing: true
 [balancers]
 pgtest01.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
 pgtest02.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
@@ -53,7 +53,7 @@ replica
 [all:vars]
 ansible_connection='ssh'
 ansible_ssh_port='22'
-ansible_user='localadm'
+#ansible_user='localadm'
 #ansible_ssh_pass='secretpassword'  # "sshpass" package is required for use "ansible_ssh_pass"
 #ansible_ssh_private_key_file=
 #ansible_python_interpreter='/usr/bin/python3'  # is required for use python3

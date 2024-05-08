@@ -1,4 +1,5 @@
 ---
+
 - name: update_pgcluster.yml | Update PostgreSQL HA Cluster (based on "Patroni")
   hosts: postgres_cluster
   gather_facts: true
@@ -14,9 +15,12 @@
       ansible.builtin.uri:
         url: http://{{ inventory_hostname }}:{{ patroni_restapi_port }}/leader
         status_code: 200
+        return_content: true
+        body_format: json
       register: patroni_leader_result
       changed_when: false
       failed_when: false
+      check_mode: false
       environment:
         no_proxy: "{{ inventory_hostname }}"
       tags: always
@@ -25,7 +29,7 @@
       ansible.builtin.add_host:
         name: "{{ item }}"
         groups: primary
-      when: hostvars[item]['patroni_leader_result']['status'] == 200
+      when: hostvars[item]['patroni_leader_result']['json']['role'] == "master"
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       tags: always
@@ -34,7 +38,7 @@
       ansible.builtin.add_host:
         name: "{{ item }}"
         groups: secondary
-      when: hostvars[item]['patroni_leader_result']['status'] != 200
+      when: hostvars[item]['patroni_leader_result']['json']['role'] == "replica"
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       tags: always
@@ -261,3 +265,5 @@
   tags:
     - update
     - update-extensions
+
+...

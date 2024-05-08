@@ -20,12 +20,15 @@
       ansible.builtin.uri:
         url: http://{{ inventory_hostname }}:{{ patroni_restapi_port }}/leader
         status_code: 200
+        return_content: true
+        body_format: json
       register: patroni_leader_result
       changed_when: false
       failed_when: false
       check_mode: false
       environment:
         no_proxy: "{{ inventory_hostname }}"
+      tags: always
 
     # Stop, if Patroni is unavailable
     - name: The Patroni cluster is unhealthy
@@ -33,6 +36,7 @@
         msg: "Patroni is unavailable on {{ ansible_hostname }}. Please check the cluster status."
       changed_when: false
       when: patroni_leader_result is undefined or patroni_leader_result.status == -1
+      tags: always
 
     - name: '[Prepare] Add host to group "primary" (in-memory inventory)'
       ansible.builtin.add_host:
@@ -40,10 +44,11 @@
         groups: primary
         is_master: true
         postgresql_exists: true
-      when: hostvars[item]['patroni_leader_result']['status'] == 200
+      when: hostvars[item]['patroni_leader_result']['json']['role'] == "master"
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       check_mode: false
+      tags: always
 
     - name: '[Prepare] Add hosts to group "secondary" (in-memory inventory)'
       ansible.builtin.add_host:
@@ -51,10 +56,11 @@
         groups: secondary
         is_master: false
         postgresql_exists: true
-      when: hostvars[item]['patroni_leader_result']['status'] != 200
+      when: hostvars[item]['patroni_leader_result']['json']['role'] == "replica"
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       check_mode: false
+      tags: always
 
     - name: "Print Patroni Cluster info"
       ansible.builtin.debug:
@@ -62,6 +68,7 @@
           - "Cluster Name: {{ patroni_cluster_name }}"
           - "Cluster Leader: {{ ansible_hostname }}"
       when: inventory_hostname in groups['primary']
+      tags: always
 
   roles:
     - role: pre-checks
@@ -147,7 +154,7 @@
       when: pgbouncer_install | bool
 
     - role: vip-manager
-      when: not with_haproxy_load_balancing | bool and
+      when: not enable_haproxy_load_balancing | bool and
         (cluster_vip is defined and cluster_vip | length > 0)
 
     - role: postgresql-users
