@@ -18,6 +18,12 @@ postgresql_stats_temp_directory_size: "1024m"
 
 # Repository
 yum_repository: []
+#  - name: ""
+#    description: ""
+#    baseurl: ""
+#    gpgkey: ""
+#    gpgcheck: "yes"
+
 #  - name: "repo name"
 #    description: "repo description"
 #    baseurl: "https://my-repo.url"
@@ -26,6 +32,7 @@ yum_repository: []
 
 install_epel_repo: false # or 'true' (installed from the package "epel-release-latest.noarch.rpm")
 install_postgresql_repo: false # or 'true' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
+install_timescale_repo: false # or 'true' (installed from the timescale git repo)
 install_scl_repo: false # or 'true' (Redhat 7 family only)
 
 # Packages (for yum repo)
@@ -63,7 +70,7 @@ system_packages:
   - less
   - sudo
   - vim
-  - gcc
+  #  - gcc
   - jq
   - iptables
   - acl
@@ -92,12 +99,14 @@ postgresql_packages:
 
 # Extra packages
 etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
+etcd_installation_method: "rpm" # 'rpm/tgz/file' if installed from file
 vip_manager_package_repo:
   "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.rpm"
+vip_manager_installation_method: "rpm"
 
 # (if enable_haproxy_load_balancing: true)
 haproxy_installation_method: "rpm"  # (default)"rpm" or "src"
-haproxy_install_repo: true  # or 'false' # only for RedHat/CentOS version 7.
+haproxy_install_repo: false  # or 'false' # only for RedHat/CentOS version 7.
 # For RedHat/CentOS/OracleLinux 7 the haproxy version 1.8 (LTS)
 # will be installed from the "rh-haproxy18" package from the Software Collections (SCL) repository.
 # You can preload the haproxy rpm packages to your YUM repository (in this case specify "haproxy_install_repo: false").
@@ -127,7 +136,7 @@ installation_method: "repo"  # (default)"repo" or "file"
 
 # Patroni package will be installed from the pip repository (by default).
 # You also have the option of choosing an patroni installation method using the rpm package.
-patroni_installation_method: "pip"  # (default)"pip" or "rpm"
+patroni_installation_method: "rpm"  # (default)"pip" or "rpm"
 # if patroni_installation_method: "rpm"
 patroni_packages:
   - patroni

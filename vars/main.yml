@@ -16,7 +16,7 @@ vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "
 # Note: VIP-based solutions such as keepalived or vip-manager may not function correctly in cloud environments like AWS.
 
 patroni_cluster_name: "postgres-cluster"  # the cluster name (must be unique for each cluster)
-patroni_install_version: "3.2.2"  # or 'latest'
+patroni_install_version: "3.3.0"  # or 'latest'
 
 patroni_superuser_username: "postgres"
 patroni_superuser_password: "postgres-pass"  # please change password
@@ -30,10 +30,10 @@ synchronous_node_count: 1  # number of synchronous standby databases
 # Load Balancing
 enable_haproxy_load_balancing: true # false or 'true' if you want to install and configure the load-balancing
 haproxy_listen_port:
-  master: 5000
-  replicas: 5001
-  replicas_sync: 5002
-  replicas_async: 5003
+  master: 5433
+  replicas: 5434
+  replicas_sync: 5435
+  replicas_async: 5436
 # The following ('_direct') ports are used for direct connections to the PostgreSQL database,
 # bypassing the PgBouncer connection pool (if 'pgbouncer_install' is 'true').
 # Uncomment the relevant lines if you need to set up direct connections.
@@ -83,8 +83,8 @@ patroni_etcd_password: "" # (optional) password for etcd authentication
 patroni_etcd_protocol: "" # (optional) http or https, if not specified http is used
 
 # more options you can specify in the roles/patroni/templates/patroni.yml.j2
-# https://patroni.readthedocs.io/en/latest/SETTINGS.html#etcd
-# https://patroni.readthedocs.io/en/latest/SETTINGS.html#consul
+# https://patroni.readthedocs.io/en/latest/yaml_configuration.html#etcd
+# https://patroni.readthedocs.io/en/latest/yaml_configuration.html#consul
 
 # if dcs_type: "consul"
 consul_version: "1.15.8"
@@ -223,7 +223,7 @@ postgresql_parameters:
   - { option: "archive_command", value: "cd ." }  # not doing anything yet with WAL-s
 #  - { option: "archive_command", value: "{{ wal_g_archive_command }}" }  # archive WAL-s using WAL-G
 #  - { option: "archive_command", value: "{{ pgbackrest_archive_command }}" }  # archive WAL-s using pgbackrest
-  - { option: "wal_level", value: "replica" }
+  - { option: "wal_level", value: "logical" }
   - { option: "wal_keep_size", value: "2GB" }
   - { option: "max_wal_senders", value: "10" }
   - { option: "max_replication_slots", value: "10" }
@@ -277,7 +277,7 @@ postgresql_parameters:
 # Set this variable to 'true' if you want the cluster to be automatically restarted
 # after changing the 'postgresql_parameters' variable that requires a restart in the 'config_pgcluster.yml' playbook.
 # By default, the cluster will not be automatically restarted.
-pending_restart: false
+pending_restart: true
 
 # specify additional hosts that will be added to the pg_hba.conf
 postgresql_pg_hba:
@@ -312,8 +312,8 @@ pgbouncer_listen_port: 6432
 pgbouncer_max_client_conn: 10000
 pgbouncer_max_db_connections: 1000
 pgbouncer_max_prepared_statements: 1024
-pgbouncer_default_pool_size: 250
-pgbouncer_query_wait_timeout: 3600
+pgbouncer_default_pool_size: 20
+pgbouncer_query_wait_timeout: 120
 pgbouncer_default_pool_mode: "session"
 pgbouncer_admin_users: "{{ patroni_superuser_username }}"  # comma-separated list of users, who are allowed to change settings
 pgbouncer_stats_users: "{{ patroni_superuser_username }}"  # comma-separated list of users who are just allowed to use SHOW command
@@ -343,7 +343,7 @@ patroni_master_start_timeout: 300
 patroni_maximum_lag_on_failover: 1048576 # (1MB) the maximum bytes a follower may lag to be able to participate in leader election.
 patroni_maximum_lag_on_replica: "100MB" # the maximum of lag that replica can be in order to be available for read-only queries.
 
-# https://patroni.readthedocs.io/en/latest/SETTINGS.html?highlight=callbacks#dynamic-configuration-settings
+# https://patroni.readthedocs.io/en/latest/yaml_configuration.html#postgresql
 patroni_callbacks: []
 #  - {action: "on_role_change", script: ""}
 #  - {action: "on_stop", script: ""}
@@ -361,6 +361,19 @@ patroni_standby_cluster:
 #  primary_slot_name: ""  # which slot on the remote master to use for replication (optional)
 #  restore_command: ""  # command to restore WAL records from the remote master to standby leader (optional)
 #  recovery_min_apply_delay: ""  # how long to wait before actually apply WAL records on a standby leader (optional)
+
+# Permanent replication slots.
+# These slots will be preserved during switchover/failover.
+# https://patroni.readthedocs.io/en/latest/dynamic_configuration.html
+patroni_slots: []
+#  - slot: "logical_replication_slot" # the name of the permanent replication slot.
+#    type: "logical" # the type of slot. Could be 'physical' or 'logical' (if the slot is logical, you have to define 'database' and 'plugin').
+#    plugin: "pgoutput" # the plugin name for the logical slot.
+#    database: "postgres" # the database name where logical slots should be created.
+#  - slot: "test_logical_replication_slot"
+#    type: "logical"
+#    plugin: "pgoutput"
+#    database: "test"
 
 patroni_log_destination: stderr  # or 'logfile'
 # if patroni_log_destination: logfile
@@ -522,6 +535,7 @@ pgbackrest_conf:
     - { option: "process-max", value: "4" }
     - { option: "log-level-console", value: "info" }
     - { option: "recovery-option", value: "recovery_target_action=promote" }
+    - { option: "pg1-socket-path", value: "{{ postgresql_unix_socket_dir }}" }
     - { option: "pg1-path", value: "{{ postgresql_data_dir }}" }
 #    - { option: "", value: "" }
 # (optional) dedicated backup server config (if "repo_host" is set)
