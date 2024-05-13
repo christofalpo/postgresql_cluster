@@ -16,7 +16,6 @@ vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "
 # Note: VIP-based solutions such as keepalived or vip-manager may not function correctly in cloud environments.
 
 patroni_cluster_name: "postgres-cluster"  # the cluster name (must be unique for each cluster)
-
 patroni_superuser_username: "postgres"
 patroni_superuser_password: ""  # Please specify a password. If not defined, will be generated automatically during deployment.
 patroni_replication_username: "replicator"
@@ -29,10 +28,10 @@ synchronous_node_count: 1  # number of synchronous standby databases
 # Load Balancing
 enable_haproxy_load_balancing: true # false or 'true' if you want to install and configure the load-balancing
 haproxy_listen_port:
-  master: 5000
-  replicas: 5001
-  replicas_sync: 5002
-  replicas_async: 5003
+  master: 5433
+  replicas: 5434
+  replicas_sync: 5435
+  replicas_async: 5436
 # The following ('_direct') ports are used for direct connections to the PostgreSQL database,
 # bypassing the PgBouncer connection pool (if 'pgbouncer_install' is 'true').
 # Uncomment the relevant lines if you need to set up direct connections.
@@ -318,7 +317,7 @@ postgresql_parameters:
 # Set this variable to 'true' if you want the cluster to be automatically restarted
 # after changing the 'postgresql_parameters' variable that requires a restart in the 'config_pgcluster.yml' playbook.
 # By default, the cluster will not be automatically restarted.
-pending_restart: false
+pending_restart: true
 
 # specify additional hosts that will be added to the pg_hba.conf
 postgresql_pg_hba:
@@ -354,8 +353,13 @@ pgbouncer_listen_port: 6432
 pgbouncer_max_client_conn: 100000
 pgbouncer_max_db_connections: 10000
 pgbouncer_max_prepared_statements: 1024
+<<<<<<< HEAD:automation/vars/main.yml
 pgbouncer_query_wait_timeout: 120
 pgbouncer_default_pool_size: 100
+=======
+pgbouncer_default_pool_size: 20
+pgbouncer_query_wait_timeout: 120
+>>>>>>> d8122c2 (updates):vars/main.yml
 pgbouncer_default_pool_mode: "session"
 pgbouncer_admin_users: "{{ patroni_superuser_username }}"  # comma-separated list of users, who are allowed to change settings
 pgbouncer_stats_users: "{{ patroni_superuser_username }}"  # comma-separated list of users who are just allowed to use SHOW command

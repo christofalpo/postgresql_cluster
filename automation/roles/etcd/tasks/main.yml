@@ -3,10 +3,6 @@
 - name: Make sure handlers are flushed immediately
   ansible.builtin.meta: flush_handlers
 
-#- name: variables
-#  debug:
-#    var: hostvars[inventory_hostname]
-
 - name: Make sure the unzip/tar packages are present
   ansible.builtin.package:
     name:
@@ -52,9 +48,36 @@
         - etcdctl
   when:
     - installation_method == "repo"
+    - etcd_installation_method == "tgz"
     - etcd_package_repo | length > 0
     - not ansible_check_mode
   tags: 
+    - etcd
+    - etcd_install
+
+- block:  # install etch package from rpm
+    - name: Install etcd rpm
+      ansible.builtin.yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - etcd
+        - python3-etcd
+
+    - name: Make etcd available from /usr/local/bin/
+      ansible.builtin.file:
+        src: "/usr/bin/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        state: link
+      loop:
+        - etcd
+        - etcdctl
+
+  when:
+    - installation_method == "repo"
+    - etcd_installation_method == "rpm"
+    - not ansible_check_mode
+  tags:
     - etcd
     - etcd_install
 
@@ -77,6 +100,7 @@
         - etcdctl
   when:
     - installation_method == "file"
+    - etcd_installation_method == "file"
     - etcd_package_file | length > 0
     - not ansible_check_mode
   tags:
