@@ -11,6 +11,7 @@
     where application_name != 'pg_basebackup'"
   register: pg_replication_state
   changed_when: false
+  check_mode: false
   when:
     - inventory_hostname in groups['primary']
 
