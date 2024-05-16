@@ -69,6 +69,7 @@
         src: "/usr/bin/{{ item }}"
         dest: "/usr/local/bin/{{ item }}"
         state: link
+        force: true
       loop:
         - etcd
         - etcdctl
