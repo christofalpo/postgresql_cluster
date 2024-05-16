@@ -20,7 +20,7 @@
         status_code: 200
         return_content: true
         body_format: json
-      register: patroni_leader_resultA
+      register: patroni_leader_result
       check_mode: false
       changed_when: false
       failed_when: false
