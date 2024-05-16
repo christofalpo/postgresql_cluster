@@ -11,7 +11,7 @@ firewall_type: "firewalld"
 # Note: can be firewalld/iptables/uwf
 
 # Cluster variables
-cluster_vip: "10.140.195.215"  # IP address for client access to the databases in the cluster (optional).
+cluster_vip: "10.140.189.162"  # IP address for client access to the databases in the cluster (optional).
 vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "ens32").
 # Note: VIP-based solutions such as keepalived or vip-manager may not function correctly in cloud environments like AWS.
 
@@ -326,6 +326,9 @@ pgbouncer_auth_dbname: "postgres"
 pgbouncer_client_tls_sslmode: "disable"
 pgbouncer_client_tls_key_file: ""
 pgbouncer_client_tls_cert_file: ""
+pgbouncer_client_tls_ca_file: ""
+pgbouncer_client_tls_protocols: "secure" # allowed values: tlsv1.0, tlsv1.1, tlsv1.2, tlsv1.3, all, secure (tlsv1.2,tlsv1.3)
+pgbouncer_client_tls_ciphers: "default" # allowed values: default, secure, fast, normal, all (not recommended)
 
 pgbouncer_pools:
   - { name: "postgres", dbname: "postgres", pool_parameters: "" }
@@ -456,7 +459,7 @@ pg_probackup_patroni_cluster_bootstrap_command: "{{ pg_probackup_command_parts |
 
 # WAL-G
 wal_g_install: false  # or 'true'
-wal_g_version: "2.0.1"
+wal_g_version: "3.0.0"
 wal_g_json:  # config https://github.com/wal-g/wal-g#configuration
   - { option: "AWS_ACCESS_KEY_ID", value: "{{ AWS_ACCESS_KEY_ID | default('') }}" }  # define values or pass via --extra-vars
   - { option: "AWS_SECRET_ACCESS_KEY", value: "{{ AWS_SECRET_ACCESS_KEY | default('') }}" }  # define values or pass via --extra-vars
