@@ -10,6 +10,7 @@
 
 - name: Get active zone(s)
   ansible.builtin.command: "firewall-cmd --get-active-zones"
+  changed_when: false
   register: firewalld_active_zones
   
 - name: Add ports to zone
