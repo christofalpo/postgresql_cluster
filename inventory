@@ -11,16 +11,16 @@
 
 # if dcs_exists: false and dcs_type: "etcd"
 [etcd_cluster]  # recommendation: 3, or 5-7 nodes
-sv25877.regsj.intern ansible_hostname=sv25877 ansible_python_interpreter='/usr/libexec/platform-python'
-sv25878.regsj.intern ansible_hostname=sv25878 ansible_python_interpreter='/usr/libexec/platform-python'
-sv25879.regsj.intern ansible_hostname=sv25879 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern ansible_hostname=sv25877
+sv25878.regsj.intern ansible_hostname=sv25878
+sv25879.regsj.intern ansible_hostname=sv25879
 
 
 # if dcs_exists: false and dcs_type: "consul"
 [consul_instances]  # recommendation: 3 or 5-7 nodes
-sv25877.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
-sv25878.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
-sv25879.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1 ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1
+sv25878.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1
+sv25879.regsj.intern consul_node_role=server consul_bootstrap_expect=true consul_datacenter=dc1
 #10.128.64.144 consul_node_role=client consul_datacenter=dc1
 #10.128.64.145 consul_node_role=client consul_datacenter=dc2
 
@@ -33,11 +33,11 @@ sv25879.regsj.intern ansible_python_interpreter='/usr/libexec/platform-python'
 
 # PostgreSQL nodes
 [master]
-sv25877.regsj.intern ansible_hostname=sv25877 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
+sv25877.regsj.intern ansible_hostname=sv25877 postgresql_exists=false
 
 [replica]
-sv25878.regsj.intern ansible_hostname=sv25878 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
-sv25879.regsj.intern ansible_hostname=sv25879 postgresql_exists=false ansible_python_interpreter='/usr/libexec/platform-python'
+sv25878.regsj.intern ansible_hostname=sv25878 postgresql_exists=false
+sv25879.regsj.intern ansible_hostname=sv25879 postgresql_exists=false
 #10.128.64.144 hostname=pgnode04 postgresql_exists=false new_node=true
 
 [postgres_cluster:children]
@@ -52,6 +52,7 @@ replica
 [all:vars]
 ansible_connection='ssh'
 ansible_ssh_port='22'
+cluster_vip='10.140.189.162'
 #ansible_user='localadm'
 #ansible_ssh_pass='secretpassword'  # "sshpass" package is required for use "ansible_ssh_pass"
 #ansible_ssh_private_key_file=
