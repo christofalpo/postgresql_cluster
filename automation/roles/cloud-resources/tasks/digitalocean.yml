@@ -262,7 +262,7 @@
                   'addresses': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
                 }
               }
-            ] if database_public_access | bool and with_haproxy_load_balancing | bool else []) +
+            ] if database_public_access | bool and enable_haproxy_load_balancing | bool else []) +
             ([
               {
                 'protocol': 'tcp',
@@ -271,7 +271,7 @@
                   'addresses': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
                 }
               }
-            ] if database_public_access | bool and (not with_haproxy_load_balancing | bool and pgbouncer_install | bool) else []) +
+            ] if database_public_access | bool and (not enable_haproxy_load_balancing | bool and pgbouncer_install | bool) else []) +
             ([
               {
                 'protocol': 'tcp',
@@ -280,7 +280,7 @@
                   'addresses': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
                 }
               }
-            ] if database_public_access | bool and (not with_haproxy_load_balancing | bool and not pgbouncer_install | bool) else [])
+            ] if database_public_access | bool and (not enable_haproxy_load_balancing | bool and not pgbouncer_install | bool) else [])
           }}
       when:
         - cloud_firewall | bool
@@ -365,7 +365,7 @@
                   'addresses': [sources_addresses]
                 }
               }
-            ] if with_haproxy_load_balancing | bool else []) +
+            ] if enable_haproxy_load_balancing | bool else []) +
             ([
              {
                 'protocol': 'tcp',

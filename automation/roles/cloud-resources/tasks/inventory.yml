@@ -44,7 +44,7 @@
   loop_control:
     label: "{{ item.public_ip }}"
   changed_when: false
-  when: with_haproxy_load_balancing | bool
+  when: enable_haproxy_load_balancing | bool
 
 - name: "Inventory | Add host to 'etcd_cluster' group"
   ansible.builtin.add_host:

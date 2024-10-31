@@ -232,7 +232,7 @@
                 'port': haproxy_listen_port.replicas_async,
                 'source_ips': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
               }
-            ] if database_public_access | bool and with_haproxy_load_balancing | bool else []) +
+            ] if database_public_access | bool and enable_haproxy_load_balancing | bool else []) +
             ([
               {
                 'description': 'PgBouncer',
@@ -241,7 +241,7 @@
                 'port': pgbouncer_listen_port | default('6432'),
                 'source_ips': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
               }
-            ] if database_public_access | bool and (not with_haproxy_load_balancing | bool and pgbouncer_install | bool) else []) +
+            ] if database_public_access | bool and (not enable_haproxy_load_balancing | bool and pgbouncer_install | bool) else []) +
             ([
               {
                 'description': 'PostgreSQL',
@@ -250,7 +250,7 @@
                 'port': postgresql_port | default('5432'),
                 'source_ips': database_public_allowed_ips | default('0.0.0.0/0,::/0', true) | split(',')
               }
-            ] if database_public_access | bool and (not with_haproxy_load_balancing | bool and not pgbouncer_install | bool) else [])
+            ] if database_public_access | bool and (not enable_haproxy_load_balancing | bool and not pgbouncer_install | bool) else [])
           }}
       when:
         - cloud_firewall | bool
@@ -312,7 +312,7 @@
                 'port': haproxy_listen_port.replicas_async,
                 'source_ips': [server_network_ip_range]
               }
-            ] if with_haproxy_load_balancing | bool else []) +
+            ] if enable_haproxy_load_balancing | bool else []) +
             ([
               {
                 'description': 'PgBouncer',

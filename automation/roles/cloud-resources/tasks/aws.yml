@@ -145,13 +145,13 @@
                     haproxy_listen_port.replicas | default('5001'),
                     haproxy_listen_port.replicas_sync | default('5002'),
                     haproxy_listen_port.replicas_async | default('5003')
-                  ] if with_haproxy_load_balancing | bool else []) +
+                  ] if enable_haproxy_load_balancing | bool else []) +
                   ([
                     pgbouncer_listen_port | default('6432')
-                  ] if not with_haproxy_load_balancing | bool and pgbouncer_install | bool else []) +
+                  ] if not enable_haproxy_load_balancing | bool and pgbouncer_install | bool else []) +
                   ([
                     postgresql_port | default('5432')
-                  ] if not with_haproxy_load_balancing | bool and not pgbouncer_install | bool else []),
+                  ] if not enable_haproxy_load_balancing | bool and not pgbouncer_install | bool else []),
                 'cidr_ip': database_public_allowed_ips | default('0.0.0.0/0', true) | split(',')
               }
             ] if database_public_access | bool else []) +
@@ -176,7 +176,7 @@
                   haproxy_listen_port.replicas_sync | default('5002'),
                   haproxy_listen_port.replicas_async | default('5003'),
                   haproxy_listen_port.stats | default('7000')
-                ] if with_haproxy_load_balancing | bool else []) +
+                ] if enable_haproxy_load_balancing | bool else []) +
                 ([
                   etcd_client_port | default('2379'),
                   etcd_peer_port | default('2380')

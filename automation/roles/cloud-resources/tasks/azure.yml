@@ -176,9 +176,9 @@
                   haproxy_listen_port.replicas | default('5001'),
                   haproxy_listen_port.replicas_sync | default('5002'),
                   haproxy_listen_port.replicas_async | default('5003')
-                ] if with_haproxy_load_balancing | bool else []) +
-                ([pgbouncer_listen_port | default('6432')] if not with_haproxy_load_balancing | bool and pgbouncer_install | bool else []) +
-                ([postgresql_port | default('5432')] if not with_haproxy_load_balancing | bool and not pgbouncer_install | bool else []),
+                ] if enable_haproxy_load_balancing | bool else []) +
+                ([pgbouncer_listen_port | default('6432')] if not enable_haproxy_load_balancing | bool and pgbouncer_install | bool else []) +
+                ([postgresql_port | default('5432')] if not enable_haproxy_load_balancing | bool and not pgbouncer_install | bool else []),
               'source_address_prefix': '0.0.0.0/0',
               'access': 'Allow',
               'priority': 1300,
@@ -195,7 +195,7 @@
                   haproxy_listen_port.replicas_sync | default('5002'),
                   haproxy_listen_port.replicas_async | default('5003'),
                   haproxy_listen_port.stats | default('7000')
-                ] if with_haproxy_load_balancing | bool else []) +
+                ] if enable_haproxy_load_balancing | bool else []) +
                 ([pgbouncer_listen_port | default('6432')] if pgbouncer_install | bool else []) +
                 [
                   postgresql_port | default('5432'),

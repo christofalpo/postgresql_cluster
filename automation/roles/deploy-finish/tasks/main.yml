@@ -68,7 +68,7 @@
 
 # if 'cluster_vip' is defined
 - block:
-    # if 'with_haproxy_load_balancing' is 'true'
+    # if 'enable_haproxy_load_balancing' is 'true'
     - name: Connection info
       run_once: true
       ansible.builtin.debug:
@@ -81,9 +81,9 @@
             replica_async: "{{ haproxy_listen_port.replicas_async if synchronous_mode | bool else omit }}"
           superuser: "{{ superuser_username }}"
           password: "{{ superuser_password }}"
-      when: with_haproxy_load_balancing | bool
+      when: enable_haproxy_load_balancing | bool
 
-    # if 'with_haproxy_load_balancing' is 'false'
+    # if 'enable_haproxy_load_balancing' is 'false'
     - name: Connection info
       run_once: true
       ansible.builtin.debug:
@@ -92,7 +92,7 @@
           port: "{{ pgbouncer_listen_port if pgbouncer_install | bool else postgresql_port }}"
           superuser: "{{ superuser_username }}"
           password: "{{ superuser_password }}"
-      when: not with_haproxy_load_balancing | bool
+      when: not enable_haproxy_load_balancing | bool
   ignore_errors: true
   vars:
     superuser_username: "{{ patroni_superuser_username }}"
@@ -105,7 +105,7 @@
 
 # if 'cluster_vip' is not defined
 - block:
-    # if 'with_haproxy_load_balancing' is 'true'
+    # if 'enable_haproxy_load_balancing' is 'true'
     - name: Connection info
       run_once: true
       ansible.builtin.debug:
@@ -119,9 +119,9 @@
             replica_async: "{{ haproxy_listen_port.replicas_async if synchronous_mode | bool else omit }}"
           superuser: "{{ superuser_username }}"
           password: "{{ superuser_password }}"
-      when: with_haproxy_load_balancing | bool
+      when: enable_haproxy_load_balancing | bool
 
-    # if 'with_haproxy_load_balancing' is 'false' and 'pgbouncer_install' is 'true'
+    # if 'enable_haproxy_load_balancing' is 'false' and 'pgbouncer_install' is 'true'
     - name: Connection info
       run_once: true
       ansible.builtin.debug:
@@ -131,9 +131,9 @@
           port: "{{ pgbouncer_listen_port }}"
           superuser: "{{ superuser_username }}"
           password: "{{ superuser_password }}"
-      when: not with_haproxy_load_balancing | bool
+      when: not enable_haproxy_load_balancing | bool
 
-    # if 'with_haproxy_load_balancing' is 'false' and 'pgbouncer_install' is 'false'
+    # if 'enable_haproxy_load_balancing' is 'false' and 'pgbouncer_install' is 'false'
     - name: Connection info
       run_once: true
       ansible.builtin.debug:
@@ -146,7 +146,7 @@
           connection_string:
             read_write: "postgresql://{{ superuser_username }}:{{ superuser_password }}@{{ libpq_postgres_host_port }}/postgres?target_session_attrs=read-write"
             read_only: "postgresql://{{ superuser_username }}:{{ superuser_password }}@{{ libpq_postgres_host_port }}/postgres?target_session_attrs=read-only{{ libpq_load_balance }}"
-      when: not with_haproxy_load_balancing | bool and not pgbouncer_install | bool
+      when: not enable_haproxy_load_balancing | bool and not pgbouncer_install | bool
   ignore_errors: true
   vars:
     public_haproxy_ip_addresses: "{{ groups['balancers'] | default([]) | map('extract', hostvars, 'ansible_ssh_host') | join(',') }}"

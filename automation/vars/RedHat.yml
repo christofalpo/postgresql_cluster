@@ -166,7 +166,7 @@ patroni_pip_requirements_repo: []
 patroni_pip_package_repo: []
 #  - "http://my-repo.url/patroni-1.6.0.tar.gz"
 
-# if with_haproxy_load_balancing: true
+# if enable_haproxy_load_balancing: true
 
 # if haproxy_installation_method: 'src' (optional)
 haproxy_major: "1.8"
