@@ -1,31 +1,35 @@
 ---
 - name: Which kind of firewall?
-  debug:
-    var: firewall_type
-
-- name: firewalld?
-  debug:
-    var: firewall_disable_firewalld
-
-- name: uwf?
-  debug:
-    var: firewall_disable_ufw
-
-
-- name: Include firewalld
-  ansible.builtin.import_tasks: firewalld.yml
-  when: "(firewall_disable_firewalld is defined) and not (firewall_disable_firewalld|bool) and firewall_disable_ufw|bool"
-
-- name: Include ufw
-  ansible.builtin.import_tasks: ufw.yml
-  when: "(firewall_disable_firewalld|bool) and (firewall_disable_ufw is defined) and not (firewall_disable_ufw|bool)"
-
-- name: Setup iptables
-  ansible.builtin.import_tasks: iptables.yml
-  when: firewall_disable_firewalld|bool and firewall_disable_ufw|bool
+  ansible.builtin.debug:
+    msg:
+      firewall_kind: 
+        - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
+        - "{{ ('| firewall_type ' + firewall_type).ljust(45)[:45] + '|' }}"
+        - "{{ ('| firewall_disable_firewalld? ' + (firewall_disable_firewalld | bool).str()).ljust(45)[:45] + '|' }}"
+        - "{{ ('| firewall_disable_ufw?       ' + (firewall_disable_ufw | bool).str()).ljust(45)[:45] + '|' }}"
+        - "{{ '| '.ljust(45)[:45] + '|' }}"
+        - "{{ '+-'.ljust(45)[:45] + '+' }}"
 
 - name: Disable other firewalls
   ansible.builtin.import_tasks: disable-other-firewalls.yml
-  when: firewall_disable_firewalld|bool or firewall_disable_ufw|bool
+  when: (firewall_disable_firewalld | bool) or
+        (firewall_disable_ufw | bool )
+
+- name: Setup firewalld
+  ansible.builtin.import_tasks: firewalld.yml
+  when: (firewall_disable_firewalld is defined) and
+        not (firewall_disable_firewalld | bool) and
+        (firewall_disable_ufw | bool)
+
+- name: Setup ufw
+  ansible.builtin.import_tasks: ufw.yml
+  when: (firewall_disable_firewalld | bool) and
+        (firewall_disable_ufw is defined) and
+        not (firewall_disable_ufw | bool)
+
+- name: Setup iptables
+  ansible.builtin.import_tasks: iptables.yml
+  when: (firewall_disable_firewalld | bool) and
+        (firewall_disable_ufw | bool)
 
 ...

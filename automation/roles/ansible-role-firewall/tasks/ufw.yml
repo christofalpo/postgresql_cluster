@@ -1,3 +1,5 @@
 ---
 - name: Placeholder for UFW firewall rules
+  ansible.builtin.debug:
+    msg: "Dummy task for now"
 ...
