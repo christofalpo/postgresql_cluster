@@ -6,8 +6,8 @@
     firewall_kind:
       - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
       - "{{ '| {:<28} {}'.format('firewall_type:', firewall_type).ljust(45)[:45] + '|' }}"
-      - "{{ '| {:<28} {}'.format('firewall_disable_firewalld?', ((firewall_disable_firewalld | bool) | string)).ljust(45)[:45] + '|' }}"
-      - "{{ '| {:<28} {}'.format('firewall_disable_ufw?', ((firewall_disable_ufw | bool) | string)).ljust(45)[:45] + '|' }}"
+      - "{{ '| {:<28} {}'.format('firewall_disable_firewalld?', ((firewall_disable_firewalld|bool)|string)).ljust(45)[:45] + '|' }}"
+      - "{{ '| {:<28} {}'.format('firewall_disable_ufw?', ((firewall_disable_ufw|bool)|string)).ljust(45)[:45] + '|' }}"
       - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
 
 - name: Disable other firewalls
