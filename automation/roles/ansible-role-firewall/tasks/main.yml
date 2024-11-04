@@ -2,11 +2,11 @@
 - name: Which kind of firewall?
   ansible.builtin.debug:
     msg:
-      firewall_kind: 
+      firewall_kind:
         - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
         - "{{ ('| firewall_type ' + firewall_type).ljust(45)[:45] + '|' }}"
-        - "{{ ('| firewall_disable_firewalld? ' + (firewall_disable_firewalld | bool).str()).ljust(45)[:45] + '|' }}"
-        - "{{ ('| firewall_disable_ufw?       ' + (firewall_disable_ufw | bool).str()).ljust(45)[:45] + '|' }}"
+        - "{{ ('| firewall_disable_firewalld? ' + str(firewall_disable_firewalld | bool)).ljust(45)[:45] + '|' }}"
+        - "{{ ('| firewall_disable_ufw?       ' + str(firewall_disable_ufw | bool)).ljust(45)[:45] + '|' }}"
         - "{{ '| '.ljust(45)[:45] + '|' }}"
         - "{{ '+-'.ljust(45)[:45] + '+' }}"
 

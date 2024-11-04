@@ -29,7 +29,8 @@
       ansible.builtin.add_host:
         name: "{{ item }}"
         groups: primary
-      when: hostvars[item]['patroni_leader_result']['json']['role'] == "master"
+      when: hostvars[item]['patroni_leader_result']['json']['role'] == "master" or
+            hostvars[item]['patroni_leader_result']['json']['role'] == "primary"
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       tags: always
