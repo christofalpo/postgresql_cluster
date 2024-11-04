@@ -1,14 +1,15 @@
 ---
 - name: Which kind of firewall?
   ansible.builtin.debug:
-    msg:
-      firewall_kind:
-        - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
-        - "{{ ('| firewall_type ' + firewall_type).ljust(45)[:45] + '|' }}"
-        - "{{ ('| firewall_disable_firewalld? ' + str(firewall_disable_firewalld | bool)).ljust(45)[:45] + '|' }}"
-        - "{{ ('| firewall_disable_ufw?       ' + str(firewall_disable_ufw | bool)).ljust(45)[:45] + '|' }}"
-        - "{{ '| '.ljust(45)[:45] + '|' }}"
-        - "{{ '+-'.ljust(45)[:45] + '+' }}"
+    msg: "{{ firewall_kind }}"
+  vars:
+    firewall_kind:
+      - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
+      - "{{ ('| firewall_type ' + firewall_type).ljust(45)[:45] + '|' }}"
+      - "{{ ('| firewall_disable_firewalld? ' + str(firewall_disable_firewalld | bool)).ljust(45)[:45] + '|' }}"
+      - "{{ ('| firewall_disable_ufw?       ' + str(firewall_disable_ufw | bool)).ljust(45)[:45] + '|' }}"
+      - "{{ '| '.ljust(45)[:45] + '|' }}"
+      - "{{ '+-'.ljust(45)[:45] + '+' }}"
 
 - name: Disable other firewalls
   ansible.builtin.import_tasks: disable-other-firewalls.yml
