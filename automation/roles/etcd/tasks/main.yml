@@ -51,7 +51,7 @@
     - etcd_installation_method == "tgz"
     - etcd_package_repo | length > 0
     - not ansible_check_mode
-  tags: 
+  tags:
     - etcd
     - etcd_install
 

@@ -17,4 +17,4 @@
   ansible.builtin.include_tasks: "{{ role_path }}/handlers/start_consul_windows.yml"
   when: ansible_os_family == "Windows"
   listen: 'start consul'
-
+...
