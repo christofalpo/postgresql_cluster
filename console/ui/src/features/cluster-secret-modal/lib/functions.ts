@@ -31,7 +31,7 @@ export const getLocalMachineExtraVars = (values: ClusterFormValues, secretId?: n
   ...(values[CLUSTER_FORM_FIELD_NAMES.CLUSTER_VIP_ADDRESS]
     ? { cluster_vip: values[CLUSTER_FORM_FIELD_NAMES.CLUSTER_VIP_ADDRESS] }
     : {}),
-  ...(values[CLUSTER_FORM_FIELD_NAMES.IS_HAPROXY_LOAD_BALANCER] ? { with_haproxy_load_balancing: true } : {}),
+  ...(values[CLUSTER_FORM_FIELD_NAMES.IS_HAPROXY_LOAD_BALANCER] ? { enable_haproxy_load_balancing: true } : {}),
   ...(!secretId &&
   !values[CLUSTER_FORM_FIELD_NAMES.IS_USE_DEFINED_SECRET] &&
   values[CLUSTER_FORM_FIELD_NAMES.AUTHENTICATION_METHOD] === AUTHENTICATION_METHODS.PASSWORD

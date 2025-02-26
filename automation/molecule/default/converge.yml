@@ -40,7 +40,7 @@
         vip_manager_dcs_type: "{{ [dcs_type, 'patroni'] | random }}" # Randomly choose between dcs_type value or 'patroni'
       delegate_to: localhost
       run_once: true # noqa run-once
-      when: not with_haproxy_load_balancing | bool
+      when: not enable_haproxy_load_balancing | bool
 
     # Consul package for OracleLinux missing in HashiCorp repository
     # Only the installation of a binary file is supported

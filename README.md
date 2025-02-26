@@ -56,7 +56,7 @@ This scheme enables load distribution for read operations and also allows for sc
 
 When deploying to cloud providers such as AWS, GCP, Azure, DigitalOcean, and Hetzner Cloud, a cloud load balancer is automatically created by default to provide a single entry point to the database (controlled by the `cloud_load_balancer` variable).
 
-For non-cloud environments, such as when deploying on Your Own Machines, the HAProxy load balancer is available for use. To enable it, set `with_haproxy_load_balancing: true` in the vars/main.yml file.
+For non-cloud environments, such as when deploying on Your Own Machines, the HAProxy load balancer is available for use. To enable it, set `enable_haproxy_load_balancing: true` in the vars/main.yml file.
 
 > [!NOTE]
 > Your application must have support sending read requests to a custom port 5001, and write requests to port 5000.
