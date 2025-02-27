@@ -1,2 +1,22 @@
 ---
+- ansible.builtin.debug:
+    var: firewall_allowed_tcp_ports
 
+- name: Ensure ufw is started at boot
+  community.general.uwf:
+    state: enabled
+    policy: deny
+
+- name: Enable logging
+  community.general.ufw:
+    logging: 'on'
+
+- name: Add ports to be enabled
+  community.general.ufw:
+    rule: allow
+    proto: tcp
+    port: "{{ item }}"
+  loop: "{{ firewall_allowed_tcp_ports|list }}"
+  when: "firewall_allowed_tcp_ports is defined"
+
+...
