@@ -4,7 +4,7 @@
     var: firewall_allowed_tcp_ports
 
 - name: Ensure ufw is started at boot
-  community.general.uwf:
+  community.general.ufw:
     state: enabled
     policy: deny
 
