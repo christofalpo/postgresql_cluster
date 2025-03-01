@@ -4,7 +4,7 @@
   ansible.builtin.meta: flush_handlers
 
 - name: variables
-  debug:
+  ansible.builtin.debug:
     var: hostvars[inventory_hostname]
 
 - name: Make sure the unzip/tar packages are present

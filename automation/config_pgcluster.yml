@@ -73,7 +73,7 @@
         groups: primary
         is_master: true
         postgresql_exists: true
-      when: hostvars[item]['patroni_leader_result']['json']['role'] in [ "master", "primary" ]
+      when: hostvars[item]['patroni_leader_result']['json']['role'] in ["master", "primary"]
       loop: "{{ groups['postgres_cluster'] }}"
       changed_when: false
       check_mode: false
