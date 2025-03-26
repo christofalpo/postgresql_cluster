@@ -1,13 +1,13 @@
 ---
-
 - name: Reinstall platform-python
   ansible.builtin.command:
+    cmd: dnf
     argv:
-      - dnf
       - reinstall
       - platform-python
       - -y
   listen: Reinstall platform-python
   when:
     - ansible_os_family == "RedHat"
+    - ansible_os_major_version | int >= 8
 ...
