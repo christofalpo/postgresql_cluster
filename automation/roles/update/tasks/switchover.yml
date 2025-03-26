@@ -1,35 +1,43 @@
 ---
 - name: Perform switchover of the leader for the Patroni cluster "{{ patroni_cluster_name }}"
   ansible.builtin.uri:
-    url: http://{{ inventory_hostname }}:{{ patroni_restapi_port }}/switchover
+    url: http://{{ ansible_default_ipv4.address }}:{{ patroni_restapi_port }}/switchover
     method: POST
     user: "{{ patroni_restapi_username | default(omit) }}"
     password: "{{ patroni_restapi_password | default(omit) }}"
     body: '{"leader":"{{ ansible_hostname }}"}'
     body_format: json
-    timeout: 300
+    timeout: 600
     status_code:
       - 200
       - 202
       - 412
   register: patroni_switchover_result
-  until:
-  retries: 300
+  until: patroni_switchover_result.status in [200, 202]
+  retries: 10
   delay: 2
   failed_when:
     - patroni_switchover_result.status == 400
+    - patroni_switchover_result.status == 412
     - patroni_switchover_result.status == 503
   environment:
-    no_proxy: "{{ inventory_hostname }}"
+    no_proxy: "{{ ansible_default_ipv4.address }}"
 
 - name: Make sure that the Patroni is healthy and is a replica
   ansible.builtin.uri:
-    url: http://{{ inventory_hostname }}:{{ patroni_restapi_port }}/replica
+    url: http://{{ ansible_default_ipv4.address }}:{{ patroni_restapi_port }}/replica
+    method: GET
+    user: "{{ patroni_restapi_username | default(omit) }}"
+    password: "{{ patroni_restapi_password | default(omit) }}"
     status_code: 200
+    timeout: 300
   register: patroni_replica_result
   until: patroni_replica_result.status == 200
   retries: 300
   delay: 2
+  failed_when:
+    - patroni_replica_result.status == 503
+    - patroni_replica_result.status == 412
   environment:
-    no_proxy: "{{ inventory_hostname }}"
+    no_proxy: "{{ ansible_default_ipv4.address }}"
 ...

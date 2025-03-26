@@ -6,7 +6,7 @@ Wants=network-online.target
 
 [Service]
 Type=notify
-WorkingDirectory={{ etcd_data_dir }}
+WorkingDirectory={{ etcd_data_dir }}/
 EnvironmentFile=-/etc/etcd/etcd.conf
 User=etcd
 # set GOMAXPROCS to number of processors
@@ -15,9 +15,8 @@ Restart=on-failure
 LimitNOFILE=65536
 
 {% if ansible_virtualization_type not in ['container', 'docker', 'lxc', 'podman'] %}
-IOSchedulingClass=realtime
-IOSchedulingPriority=0
-Nice=-20
+{% set imported=true %}
+{% include etcd.service.override.j2 %}
 {% endif %}
 
 [Install]

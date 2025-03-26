@@ -58,7 +58,7 @@
         dest: /tmp/
         timeout: 30
         validate_certs: false
-      when: install_epel_repo|bool
+      when: install_epel_repo | bool
       tags: install_epel_repo
 
     - name: Install EPEL repository
@@ -70,7 +70,7 @@
       until: package_status is success
       delay: 5
       retries: 3
-      when: install_epel_repo|bool
+      when: install_epel_repo | bool
       tags: install_epel_repo
 
     # Add repository to install dependencies for postgresql<version>-devel package
@@ -108,7 +108,7 @@
         dest: /tmp/
         timeout: 30
         validate_certs: false
-      when: install_postgresql_repo|bool
+      when: install_postgresql_repo | bool
       tags: install_postgresql_repo
 
     - name: Install PostgreSQL repository
@@ -120,7 +120,7 @@
       until: package_status is success
       delay: 5
       retries: 3
-      when: install_postgresql_repo|bool
+      when: install_postgresql_repo | bool
       tags: install_postgresql_repo
 
     # Enable Debuginfo repository
@@ -159,8 +159,21 @@
         debuginfo_package: "postgresql{{ postgresql_version }}-debuginfo"
       tags: install_postgresql_repo, debuginfo
   environment: "{{ proxy_env | default({}) }}"
-  when: installation_method == "repo" and ansible_os_family == "RedHat"
+  when:
+    - installation_method == "repo"
+    - ansible_os_family == "RedHat"
+    - upstream_repos == "Official"
   tags: add_repo
+
+# - block: # RHEL/CentOS 
+#   - name: Fetch enabled repos
+#     community.general.rhsm_repository:
+# 
+#   when:
+#     - installation_method == "repo"
+#     - ansible_os_family == "RedHat"
+#     - upstream_repos == "Internal"
+#   tags: add_repo
 
 - name: Extensions repository
   ansible.builtin.import_tasks: extensions.yml

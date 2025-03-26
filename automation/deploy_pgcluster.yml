@@ -50,7 +50,7 @@
         msg:
           server_name: "{{ hostname | default(ansible_hostname) }}"
           server_location: "{{ server_location | default(omit) }}"
-          ip_address: "{{ inventory_hostname | default('N/A') }}"
+          ip_address: "{{ ansible_default_ipv4.address | default('N/A') }}"
           os: "{{ ansible_distribution | default('N/A') }} {{ ansible_distribution_version | default('N/A') }}"
           kernel: "{{ ansible_kernel | default('N/A') }}"
           cpu:
@@ -239,14 +239,14 @@
 
     - name: Build a firewall_ports_dynamic_var
       ansible.builtin.set_fact:
-        firewall_ports_dynamic_var: "{{ firewall_ports_dynamic_var | default([]) + (firewall_allowed_tcp_ports_for[item] | default([])) }}"
+        firewall_ports_dynamic_var: "{{ ((firewall_ports_dynamic_var | default([])) | list) + (firewall_allowed_tcp_ports_for[item] | default([])) | list }}"
       loop: "{{ hostvars[inventory_hostname].group_names }}"
       when: firewall_enabled_at_boot | bool
       tags: firewall
 
     - name: Build a firewall_rules_dynamic_var
       ansible.builtin.set_fact:
-        firewall_rules_dynamic_var: "{{ firewall_rules_dynamic_var | default([]) + (firewall_additional_rules_for[item] | default([])) }}"
+        firewall_rules_dynamic_var: "{{ ((firewall_rules_dynamic_var | default([])) | list) + (firewall_additional_rules_for[item] | default([]) | list) }}"
       loop: "{{ hostvars[inventory_hostname].group_names }}"
       when: firewall_enabled_at_boot | bool
       tags: firewall

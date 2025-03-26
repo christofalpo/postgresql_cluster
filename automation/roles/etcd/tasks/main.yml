@@ -3,9 +3,9 @@
 - name: Make sure handlers are flushed immediately
   ansible.builtin.meta: flush_handlers
 
-- name: variables
-  ansible.builtin.debug:
-    var: hostvars[inventory_hostname]
+# - name: variables
+#   ansible.builtin.debug:
+#     var: hostvars[inventory_hostname]
 
 - name: Make sure the unzip/tar packages are present
   ansible.builtin.package:
@@ -77,7 +77,6 @@
       loop:
         - etcd
         - etcdctl
-
   when:
     - installation_method == "repo"
     - etcd_installation_method == "rpm"
@@ -125,6 +124,7 @@
   ansible.builtin.file:
     path: /etc/etcd
     state: directory
+    owner: etcd
   tags:
     - etcd
     - etcd_conf
@@ -165,6 +165,36 @@
   tags:
     - etcd
     - etcd_conf
+  when:
+    - ansible_distribution != "RedHat"
+    - installation_method != "repo"
+    - etcd_installation_method == "file"
+
+- block:
+    - name: Create service extention directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/etcd.service.d
+        state: directory
+        owner: root
+        mode: "0755"
+      tags:
+        - etcd
+        - etcd_conf
+
+    - name: Copy conditions file
+      ansible.builtin.template:
+        src: templates/etcd.service.override.j2
+        dest: /etc/systemd/system/etcd.service.d/override.conf
+      tags:
+        - etcd
+        - etcd_conf
+  when:
+    - ansible_distribution in ['RedHat', 'CentOS', 'OracleLinux', 'Rocky', 'AlmaLinux']
+    - installation_method == "repo"
+    - etcd_installation_method == "rpm"
+  tags:
+    - etcd
+    - etcd_conf
 
 - name: Enable and start etcd service
   ansible.builtin.systemd:
@@ -192,7 +222,7 @@
     - name: Wait until the etcd cluster is healthy
       ansible.builtin.command: >
         /usr/local/bin/etcdctl endpoint health
-        --endpoints={{ patroni_etcd_protocol | default('http', true) }}://{{ inventory_hostname }}:2379
+        --endpoints={{ patroni_etcd_protocol | default('http', true) }}://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:2379
         {% if tls_cert_generate | default(false) | bool %}
         --cacert={{ tls_etcd_ca_cert_path | default('/etc/etcd/tls/ca.crt') }}
         --cert={{ tls_etcd_cert_path | default('/etc/etcd/tls/server.crt') }}
@@ -204,7 +234,7 @@
       until: >
         'is healthy' in etcd_health_result.stdout or
         'is healthy' in etcd_health_result.stderr
-      retries: 10
+      retries: 60
       delay: 10
       changed_when: false
       ignore_errors: false

@@ -14,6 +14,8 @@
 alma9-pg01.default.virtual ansible_hostname=alma9-pg01
 alma9-pg02.default.virtual ansible_hostname=alma9-pg02
 alma9-pg03.default.virtual ansible_hostname=alma9-pg03
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg04
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg05
 
 
 # if dcs_exists: false and dcs_type: "consul"
@@ -29,6 +31,8 @@ alma9-pg03.default.virtual consul_node_role=server consul_bootstrap_expect=true 
 alma9-pg01.default.virtual
 alma9-pg02.default.virtual
 alma9-pg03.default.virtual
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg04
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg05
 #10.128.64.144 new_node=true
 
 # PostgreSQL nodes
@@ -38,6 +42,8 @@ alma9-pg01.default.virtual ansible_hostname=alma9-pg01
 [replica]
 alma9-pg02.default.virtual ansible_hostname=alma9-pg02
 alma9-pg03.default.virtual ansible_hostname=alma9-pg03
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg04
+#alma9-pg03.default.virtual ansible_hostname=alma9-pg05
 #10.128.64.144 hostname=pgnode04 postgresql_exists=false new_node=true
 
 [postgres_cluster:children]
@@ -52,7 +58,7 @@ replica
 [all:vars]
 ansible_connection='ssh'
 ansible_ssh_port='22'
-cluster_vip='192.168.122.25'
+cluster_vip='192.168.122.14'
 #ansible_user='localadm'
 #ansible_ssh_pass='secretpassword'  # "sshpass" package is required for use "ansible_ssh_pass"
 #ansible_ssh_private_key_file=

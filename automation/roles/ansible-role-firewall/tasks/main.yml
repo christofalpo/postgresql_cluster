@@ -1,29 +1,48 @@
 ---
+- name: Set firewall vars if not defined
+  ansible.builtin.set_fact:
+    firewall_disable_firewalld: "{{ false if firewall_type == 'firewalld' else true }}"
+    firewall_disable_ufw: "{{ false if firewall_type == 'ufw' else true }}"
+    firewall_disable_iptables: "{{ false if firewall_type == 'iptables' else true }}"
+  when: firewall_type is defined and (
+        firewall_disable_firewalld is not defined or
+        firewall_disable_ufw is not defined or
+        firewall_disable_iptables is not defined )
+
 - name: Which kind of firewall?
   ansible.builtin.debug:
     msg: "{{ firewall_kind }}"
   vars:
     firewall_kind:
-      - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
+      - "{{ '+-'.ljust(45, '-')[:45] + '+' }}"
       - "{{ '| {:<28} {}'.format('firewall_type:', firewall_type).ljust(45)[:45] + '|' }}"
-      - "{{ '| {:<28} {}'.format('firewall_disable_firewalld?', ((firewall_disable_firewalld|bool)|string)).ljust(45)[:45] + '|' }}"
-      - "{{ '| {:<28} {}'.format('firewall_disable_ufw?', ((firewall_disable_ufw|bool)|string)).ljust(45)[:45] + '|' }}"
-      - "{{ '+-'.ljust(45,'-')[:45] + '+' }}"
+      - "{{ '| {:<28} {}'.format('firewall_disable_firewalld?', ((firewall_disable_firewalld | bool) | string)).ljust(45)[:45] + '|' }}"
+      - "{{ '| {:<28} {}'.format('firewall_disable_ufw?', ((firewall_disable_ufw | bool) | string)).ljust(45)[:45] + '|' }}"
+      - "{{ '| {:<28} {}'.format('firewall_disable_iptables?', ((firewall_disable_iptables | bool) | string)).ljust(45)[:45] + '|' }}"
+      - "{{ '+-'.ljust(45, '-')[:45] + '+' }}"
+
+- name: Making sure the firewall type has been defined
+  ansible.builtin.assert:
+    that:
+      - firewall_type is defined
+      - firewall_disable_firewalld is defined
+      - firewall_disable_ufw is defined
+      - firewall_disable_iptables is defined
 
 - name: Disable other firewalls
   ansible.builtin.import_tasks: disable-other-firewalls.yml
-  when: (firewall_disable_firewalld|bool) or (firewall_disable_ufw|bool )
+  when: (firewall_disable_firewalld | bool) or (firewall_disable_ufw | bool )
 
 - name: Setup firewalld
   ansible.builtin.import_tasks: firewalld.yml
-  when: (firewall_disable_firewalld is defined) and not (firewall_disable_firewalld|bool) and (firewall_disable_ufw|bool)
+  when: not (firewall_disable_firewalld | default(false) | bool) and (firewall_disable_ufw | default(true) | bool)
 
 - name: Setup ufw
   ansible.builtin.import_tasks: ufw.yml
-  when: (firewall_disable_firewalld|bool) and (firewall_disable_ufw is defined) and not (firewall_disable_ufw|bool)
+  when: (firewall_disable_firewalld | default(true) | bool) and not (firewall_disable_ufw | default(false) | bool)
 
 - name: Setup iptables
   ansible.builtin.import_tasks: iptables.yml
-  when: (firewall_disable_firewalld|bool) and (firewall_disable_ufw|bool)
+  when: (firewall_disable_firewalld | default(true) | bool) and (firewall_disable_ufw | default(true) | bool)
 
 ...

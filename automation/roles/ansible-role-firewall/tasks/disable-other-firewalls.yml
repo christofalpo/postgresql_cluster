@@ -60,4 +60,23 @@
     - firewall_disable_ufw | bool
     - ufw_installed.rc == 0
 
+- name: Check if iptables firewall is configured (on RHEL)
+  ansible.builtin.command: service iptables status
+  register: iptables_installed
+  ignore_errors: true
+  changed_when: false
+  check_mode: false
+  when:
+    - ansible_distribution == "RedHat"
+    - firewall_disable_iptables | bool
+
+- name: Disable the iptables firewall (on RHEL if configured)
+  ansible.builtin.service:
+    name: iptables
+    state: stopped
+    enabled: false
+  when:
+    - ansible_distribution == "RedHat"
+    - firewall_disable_iptables | bool
+    - iptables_installed.rc == 0
 ...

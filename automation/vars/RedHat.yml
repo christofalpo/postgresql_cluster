@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 ---
 
 # PostgreSQL variables
@@ -39,6 +40,9 @@ yum_repository: []
 #    gpgkey: "https://my-repo-key.url"
 #    gpgcheck: "yes"
 
+upstream_repos: "public" #  when only using publically available  repositories 
+                         # or "private" when all repos are provided by a 
+                         # Satellite/Foreman/Spacewalk/homegrown internal repository server
 install_epel_repo: false # or 'true' (installed from the package "epel-release-latest.noarch.rpm")
 install_postgresql_repo: false # or 'true' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
 install_timescale_repo: false # or 'true' (installed from the timescale git repo)
@@ -55,6 +59,11 @@ os_specific_packages:
     - python3-policycoreutils
     - dnf-utils
   RedHat-9:
+    - python3-libselinux
+    - python3-libsemanage
+    - python3-policycoreutils
+    - dnf-utils
+  RedHat-10:
     - python3-libselinux
     - python3-libsemanage
     - python3-policycoreutils
@@ -93,17 +102,19 @@ postgresql_packages:
   - postgresql{{ postgresql_version }}
   - postgresql{{ postgresql_version }}-server
   - postgresql{{ postgresql_version }}-contrib
+
+postgresql_optional_packages:
   - postgresql{{ postgresql_version }}-devel
   - postgresql{{ postgresql_version }}-debuginfo
-#  - pg_repack_{{ postgresql_version }}
-#  - pg_cron_{{ postgresql_version }}
-#  - pg_stat_kcache_{{ postgresql_version }}
-#  - pg_wait_sampling_{{ postgresql_version }}
-#  - postgis33_{{ postgresql_version }}
-#  - pgrouting_{{ postgresql_version }}
-#  - pgvector_{{ postgresql_version }}
-#  - pgaudit17_{{ postgresql_version }}
-#  - pg_partman_{{ postgresql_version }}
+  - pg_repack_{{ postgresql_version }}
+  - pg_cron_{{ postgresql_version }}
+  - pg_stat_kcache_{{ postgresql_version }}
+  - pg_wait_sampling_{{ postgresql_version }}
+  - postgis33_{{ postgresql_version }}
+  - pgrouting_{{ postgresql_version }}
+  - pgvector_{{ postgresql_version }}
+  - pgaudit17_{{ postgresql_version }}
+  - pg_partman_{{ postgresql_version }}
 
 # Extra packages
 etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
@@ -119,8 +130,8 @@ haproxy_install_repo: false  # or 'false' # only for RedHat/CentOS version 7.
 # For RedHat/CentOS/OracleLinux 7 the haproxy version 1.8 (LTS)
 # will be installed from the "rh-haproxy18" package from the Software Collections (SCL) repository.
 # You can preload the haproxy rpm packages to your YUM repository (in this case specify "haproxy_install_repo: false").
-# confd_package_repo: "https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64"
-confd_package_repo: "https://satellite02.regsj.intern/pulp/content/RegionSJ/Library/custom/epel_EL9/confd/confd-0.16.0-linux-amd64"
+confd_package_repo: "https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-linux-amd64"
+# confd_package_repo: "https://satellite02.regsj.intern/pulp/content/RegionSJ/Library/custom/epel_EL9/confd/confd-0.16.0-linux-amd64"
 
 # The Patroni package will be installed from the rpm package by default.
 # You also have the option of choosing an installation method using the pip package.
