@@ -162,17 +162,17 @@
   when:
     - installation_method == "repo"
     - ansible_os_family == "RedHat"
-    - upstream_repos == "Official"
+    - upstream_repos == "public"
   tags: add_repo
 
-# - block: # RHEL/CentOS 
+# - block: # RHEL/CentOS
 #   - name: Fetch enabled repos
 #     community.general.rhsm_repository:
 # 
 #   when:
 #     - installation_method == "repo"
 #     - ansible_os_family == "RedHat"
-#     - upstream_repos == "Internal"
+#     - upstream_repos == "satellite"
 #   tags: add_repo
 
 - name: Extensions repository

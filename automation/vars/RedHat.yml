@@ -40,8 +40,8 @@ yum_repository: []
 #    gpgkey: "https://my-repo-key.url"
 #    gpgcheck: "yes"
 
-upstream_repos: "public" #  when only using publically available  repositories 
-                         # or "private" when all repos are provided by a 
+upstream_repos: "public" #  when only using publically available  repositories
+                         # or "private" when all repos are provided by a
                          # Satellite/Foreman/Spacewalk/homegrown internal repository server
 install_epel_repo: false # or 'true' (installed from the package "epel-release-latest.noarch.rpm")
 install_postgresql_repo: false # or 'true' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
